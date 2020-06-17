@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B9322137249958CA00E0A5A1 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9322136249958CA00E0A5A1 /* Card.swift */; };
+		B932213924995CCB00E0A5A1 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B932213824995CCB00E0A5A1 /* CardView.swift */; };
 		B9E327BE2493736F0058EB65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E327BD2493736F0058EB65 /* AppDelegate.swift */; };
 		B9E327C02493736F0058EB65 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E327BF2493736F0058EB65 /* SceneDelegate.swift */; };
 		B9E327C22493736F0058EB65 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E327C12493736F0058EB65 /* ContentView.swift */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B9322136249958CA00E0A5A1 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		B932213824995CCB00E0A5A1 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		B9E327BA2493736F0058EB65 /* Flashzilla.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flashzilla.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9E327BD2493736F0058EB65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B9E327BF2493736F0058EB65 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -58,6 +62,8 @@
 			children = (
 				B9E327BD2493736F0058EB65 /* AppDelegate.swift */,
 				B9E327BF2493736F0058EB65 /* SceneDelegate.swift */,
+				B9322136249958CA00E0A5A1 /* Card.swift */,
+				B932213824995CCB00E0A5A1 /* CardView.swift */,
 				B9E327C12493736F0058EB65 /* ContentView.swift */,
 				B9E327C3249373780058EB65 /* Assets.xcassets */,
 				B9E327C8249373780058EB65 /* LaunchScreen.storyboard */,
@@ -149,6 +155,8 @@
 				B9E327BE2493736F0058EB65 /* AppDelegate.swift in Sources */,
 				B9E327C02493736F0058EB65 /* SceneDelegate.swift in Sources */,
 				B9E327C22493736F0058EB65 /* ContentView.swift in Sources */,
+				B9322137249958CA00E0A5A1 /* Card.swift in Sources */,
+				B932213924995CCB00E0A5A1 /* CardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
