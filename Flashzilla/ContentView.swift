@@ -7,70 +7,38 @@
 //
 
 import SwiftUI
-import CoreHaptics
 
-struct ContentView: View {
-    @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
-    
-    @Environment(\.accessibilityReduceMotion) var reduceMotion
-    @State private var scale: CGFloat = 1
-    
-    @Environment(\.accessibilityReduceTransparency) var reduceTransparency
- 
-    var body: some View {
-        
-        // MARK: Differentiate without color
-//        HStack {
-//            if differentiateWithoutColor {
-//                Image(systemName: "checkmark.circle")
-//            }
-//            Text("Success")
-//        }
-//        .padding()
-//        .background(differentiateWithoutColor ? Color.black : Color.green)
-//        .foregroundColor(.white)
-//        .clipShape(Capsule())
-        
-        // MARK: Reduce motion
-//        Text("Hello, World!")
-//        .scaleEffect(scale)
-////            .onTapGesture {
-////                if self.reduceMotion {
-////                    self.scale *= 1.5
-////                } else {
-////                    withAnimation {
-////                        self.scale *= 1.5
-////                    }
-////                }
-//
-//            .onTapGesture {
-//                self.withOptionalAnimation {
-//                    self.scale *= 1.5
-//                }
-        
-        // MARK: Reduce transparency
-        Text("Hello, World!")
-            .padding()
-            .background(reduceTransparency ? Color.black : Color.black.opacity(0.5))
-            .foregroundColor(.white)
-            .clipShape(Capsule())
-    }
-    
-    func withOptionalAnimation<Result>(_ animation: Animation? = .default, _ body: () throws -> Result) rethrows -> Result {
-        if UIAccessibility.isReduceMotionEnabled {
-            return try body()
-        } else {
-            return try withAnimation(animation, body)
-        }
+extension View {
+    func stacked(at position: Int, in total: Int) -> some View {
+        let offset = CGFloat(total - position)
+        return self.offset(CGSize(width: 0, height: offset * 10))
     }
 }
-    
-    
 
+struct ContentView: View {
+    @State private var cards = [Card](repeating: Card.example, count: 10)
     
+    var body: some View {
+        ZStack {
+            Image("background")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+            VStack {
+                ZStack {
+                    ForEach(0..<cards.count, id: \.self) { index in
+                        CardView(card: self.cards[index])
+                            .stacked(at: index, in: self.cards.count)
+                    }
+                }
+            }
+        }
+        
+        
+        
+    }
+}
  
-
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
