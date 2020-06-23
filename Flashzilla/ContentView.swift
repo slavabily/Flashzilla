@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CoreHaptics
 
 extension View {
     func stacked(at position: Int, in total: Int) -> some View {
@@ -28,6 +29,11 @@ struct ContentView: View {
     
     @State private var showingEditscreen = false
     
+    @State private var isTimerRunOut = false
+    @State private var feedback = UINotificationFeedbackGenerator()
+    
+    @State private var engine: CHHapticEngine?
+    
     var body: some View {
         ZStack {
             Image(decorative: "background")
@@ -35,15 +41,22 @@ struct ContentView: View {
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
             VStack {
+                if isTimerRunOut {
+                    Text("Time is over!")
+                        .font(.largeTitle)
+                }
                 Text("Time: \(timeRemaining)")
                     .font(.largeTitle)
                     .foregroundColor(.white)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 5)
                     .background(
-                Capsule()
-                    .fill(Color.black)
-                    .opacity(0.75))
+                        Capsule()
+                            .fill(Color.black)
+                            .opacity(0.75))
+                
+                    .rotation3DEffect( Angle(degrees: isTimerRunOut ? 90 : 0), axis: (x: 1, y: 0, z: 0))
+                
                 ZStack {
                     ForEach(0..<cards.count, id: \.self) { index in
                         CardView(card: self.cards[index]) {
@@ -128,6 +141,13 @@ struct ContentView: View {
             guard self.isActive else { return }
             if self.timeRemaining > 0 {
                 self.timeRemaining -= 1
+                self.prepareHaptics()
+            } else {
+                withAnimation {
+                    self.isTimerRunOut = true
+                }
+//                self.feedback.notificationOccurred(.success)
+                self.complexSuccess()
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { (_) in
@@ -144,6 +164,50 @@ struct ContentView: View {
         .onAppear(perform: resetCards)
     }
     
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else {
+            print("Haptics doesn't supported!")
+            return
+        }
+        
+        do {
+            self.engine = try CHHapticEngine()
+            try? engine?.start()
+        } catch {
+            print("There was an error creating the engine: \(error.localizedDescription)")
+        }
+    }
+    
+    func complexSuccess() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else {
+            print("Haptics doesn't supported!")
+            return
+        }
+        
+        var events = [CHHapticEvent]()
+        
+        for i in stride(from: 0, to: 1, by: 0.1) {
+            let intencity = CHHapticEventParameter(parameterID: .hapticIntensity, value: Float(i))
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: Float(i))
+            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intencity, sharpness], relativeTime: i)
+            events.append(event)
+        }
+        for i in stride(from: 0, to: 1, by: 0.1) {
+            let intencity = CHHapticEventParameter(parameterID: .hapticIntensity, value: Float(1 - i))
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: Float(1 - i))
+            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intencity, sharpness], relativeTime: 1 + i)
+            events.append(event)
+        }
+        
+        do {
+            let pattern = try CHHapticPattern(events: events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription)")
+        }
+    }
+    
     func removeCard(at index: Int) {
         guard index >= 0 else { return }
         
@@ -157,6 +221,7 @@ struct ContentView: View {
     func resetCards() {
         timeRemaining = 100
         isActive = true
+        isTimerRunOut = false
         loadData()
     }
     
